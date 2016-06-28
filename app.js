@@ -3,7 +3,7 @@ var url = require("url");
 var fs = require("fs");
 var path = require("path");
 var mime = require('mime');
-
+var zlib = require("zlib");
 http.createServer(function (request, response) {
     var pathname = url.parse(request.url).pathname;
     console.log(pathname);
@@ -83,10 +83,10 @@ http.createServer(function (request, response) {
             'Expires': expires.toUTCString(),
             'Content-Type': mime.lookup(filename),
             'Last-Modified': LastModified,
-            'Etag': etag
+            'Etag': etag,
+            'Content-Encoding':'gzip'
         });
-        response.write(file);
-        response.end();
+        fs.createReadStream(filename).pipe(zlib.createGzip()).pipe(response);
     }
 }).listen(8888);
 
