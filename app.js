@@ -2,6 +2,7 @@ var http = require("http");
 var url = require("url");
 var fs = require("fs");
 var path = require("path");
+var mime = require('mime');
 
 http.createServer(function (request, response) {
     var pathname = url.parse(request.url).pathname;
@@ -17,7 +18,7 @@ http.createServer(function (request, response) {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end(err);
                 } else {
-                    response.writeHead(200, {'Content-Type': 'text/plain'});
+                    response.writeHead(200, {'Content-Type': mime.lookup(filename)});
                     response.write(file);
                     response.end();
                 }
