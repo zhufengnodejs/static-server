@@ -1,6 +1,7 @@
 var http = require("http");
+var url = require("url");
 http.createServer(function (request, response) {
-    response.writeHead(200, {"Content-Type": "text/plain"});
-    response.write("Hello World");
+    var pathname = url.parse(request.url).pathname;
+    response.write(pathname);
     response.end();
 }).listen(8888);
