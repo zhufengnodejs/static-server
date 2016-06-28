@@ -6,7 +6,7 @@ var mime = require('mime');
 var zlib = require("zlib");
 http.createServer(function (request, response) {
     var pathname = url.parse(request.url).pathname;
-    console.log(pathname);
+    pathname = pathname + (pathname.endsWith('/') ? 'index.html' : '');
     var filename = path.join(__dirname, 'public', pathname);
     fs.exists(filename, function (exists) {
         if (exists) {
@@ -27,7 +27,7 @@ http.createServer(function (request, response) {
                     if (etag == ifNoneMatch) {
                         byTime();
                     } else {
-                        sendFile(undefined,etag,file);
+                        sendFile(undefined, etag, file);
                     }
                 }
             });
@@ -84,7 +84,7 @@ http.createServer(function (request, response) {
             'Content-Type': mime.lookup(filename),
             'Last-Modified': LastModified,
             'Etag': etag,
-            'Content-Encoding':'gzip'
+            'Content-Encoding': 'gzip'
         });
         fs.createReadStream(filename).pipe(zlib.createGzip()).pipe(response);
     }
